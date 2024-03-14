@@ -1,15 +1,10 @@
 import fastify, { FastifyInstance } from 'fastify';
+import cors from '@fastify/cors';
 import { Server, IncomingMessage, ServerResponse } from 'http'
-import * as fbAdmin from 'firebase-admin';
 import * as dotenv from 'dotenv';
+import routes from './routes';
 
 dotenv.config();
-
-const fbApp: fbAdmin.app.App = fbAdmin.initializeApp({
-  credential: fbAdmin.credential.cert(process.env.GOOGLE_APPLICATION_CREDENTIALS as string)
-});
-
-const fbFirestore: fbAdmin.firestore.Firestore = fbApp.firestore();
 
 const server: FastifyInstance<Server, IncomingMessage, ServerResponse> = fastify({
   logger: {
@@ -17,6 +12,9 @@ const server: FastifyInstance<Server, IncomingMessage, ServerResponse> = fastify
     level: 'info',
   },
 });
+
+server.register(cors, { origin: ['http://localhost:3002'] });
+server.register(routes);
 
 server.listen({port: Number(process.env.PORT) ?? 3000}, (error: Error | null, address: string | number) => {
   if (error) {

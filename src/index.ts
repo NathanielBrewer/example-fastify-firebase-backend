@@ -13,7 +13,7 @@ const server: FastifyInstance<Server, IncomingMessage, ServerResponse> = fastify
   },
 });
 
-server.register(cors, { origin: ['http://localhost:3002', 'https://nathanielbrewer.github.io/parados-frontend/'] });
+server.register(cors, { origin: ['http://localhost:3002', 'https://nathanielbrewer.github.io'] });
 server.register(routes);
 
 server.listen({port: Number(process.env.PORT) ?? 3000, host: '0.0.0.0'}, (error: Error | null, address: string | number) => {

@@ -1,5 +1,6 @@
 import fastify, { FastifyInstance } from 'fastify';
 import cors from '@fastify/cors';
+import multipart from '@fastify/multipart';
 import { Server, IncomingMessage, ServerResponse } from 'http'
 import * as dotenv from 'dotenv';
 import routes from './routes';
@@ -13,10 +14,14 @@ const server: FastifyInstance<Server, IncomingMessage, ServerResponse> = fastify
   },
 });
 
-server.register(cors, { origin: ['http://localhost:3002', 'https://nathanielbrewer.github.io'] });
+server.register(multipart);
+server.register(cors, { 
+  origin: ['http://localhost:3001', 'http://localhost:3001/parados-frontend', 'http://127.0.0.1:3001', 'https://nathanielbrewer.github.io'],
+  exposedHeaders: ['Content-Type', 'X-Content-Type', 'Content-Disposition'], 
+});
 server.register(routes);
 
-server.listen({port: Number(process.env.PORT) ?? 3000, host: '0.0.0.0'}, (error: Error | null, address: string | number) => {
+server.listen({port: Number(process.env.PORT) ?? 3000, host: '127.0.0.1'}, (error: Error | null, address: string | number) => {
   if (error) {
     server.log.error(error);
   }

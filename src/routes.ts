@@ -4,13 +4,35 @@ import { v4 as uuidv4 } from 'uuid';
 import * as path from 'path';
 import getRawBody from 'raw-body';
 
+interface TextPostBody {
+  text: string;
+}
+
+interface TextPostRequest extends FastifyRequest {
+  Body: TextPostBody;
+}
+
+interface TextGetParams {
+  id: string;
+}
+
+interface FileGetParams {
+  filename: string;
+}
+
+interface FileRequestFileData {
+  filename: string;
+  file: NodeJS.ReadableStream;
+}
+
+
 async function routes(fastify: FastifyInstance, options: any): Promise<void> {
   fastify.get('/', async (requst, reply) => {
     return { hello: 'hello' }
   });
 
-  fastify.post('/text', async (request, reply) => {
-    const { text } = request.body as { text: string };
+  fastify.post<TextPostRequest>('/text', async (request, reply) => {
+    const { text } = request.body;
     try {
       const docRef = await textCollection.add({ text });
       console.log('docRef', docRef.id);
@@ -20,8 +42,8 @@ async function routes(fastify: FastifyInstance, options: any): Promise<void> {
     }
   });
 
-  fastify.get('/text/:id', async (request: {[key:string]: any, id: string}, reply) => {
-    const { id } = request.params;
+  fastify.get('/text/:id', async (request, reply) => {
+    const { id } = request.params as TextGetParams;
     try {
       const docRef = textCollection.doc(id);
       const doc = await docRef.get();
@@ -39,9 +61,9 @@ async function routes(fastify: FastifyInstance, options: any): Promise<void> {
   }
 
   fastify.post('/file', async(request, reply) => {
-    const data = await (request as UploadRequest).file() as any;
-    const originalFilename = data?.filename as string;
-    const fileStream = data?.file;
+    const data = await (request as UploadRequest).file() as FileRequestFileData;
+    const originalFilename = data.filename;
+    const fileStream = data.file;
 
     const extension = path.extname(originalFilename);
     const basename = path.basename(originalFilename, extension);
@@ -55,9 +77,9 @@ async function routes(fastify: FastifyInstance, options: any): Promise<void> {
       await new Promise((resolve, reject) => {
         fileStream.pipe(uploadStream)
           .on('finish', resolve)
-          .on('error', reject);
-        fileStream.on('error', reject);
-      });
+          .on('error', (error) => reject(new Error('Error streaming file to Firebase Storage: ' + error.message)));
+        fileStream.on('error', (error) => reject(new Error('Error reading file stream: ' + error.message)));
+        });
       return reply.status(200).send({filename: uniqueFilename});
     } catch(error) {
       return reply.code(500).send();
@@ -65,7 +87,7 @@ async function routes(fastify: FastifyInstance, options: any): Promise<void> {
   });
 
   fastify.get('/file/:filename', async (request: {[key:string]: any}, reply) => {
-    const { filename } = request.params;
+    const { filename } = request.params as FileGetParams;
 
     try {
       const file = bucket.file(filename);

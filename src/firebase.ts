@@ -11,7 +11,7 @@ if (fbAdmin.apps.length === 0) {
 }
 
 const db: fbAdmin.firestore.Firestore = fbAdmin.apps[0]!.firestore();
-const textCollection = db.collection('texts');
+const textCollection: fbAdmin.firestore.CollectionReference = db.collection('texts');
 const bucket = fbAdmin.storage().bucket();
 
 export { 

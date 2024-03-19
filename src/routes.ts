@@ -45,7 +45,6 @@ async function routes(fastify: FastifyInstance, options: any): Promise<void> {
     const uniqueFilename = `${basename}-${uuidv4()}${extension}`;
     const metadata = {
       contentType: `image/${(extension === '.png')? 'png' : 'jpeg'}`,
-      contentDisposition: 'attachment; filename="uniqueFilename"',
     }
     try {
       const uploadStream = await bucket.file(uniqueFilename).createWriteStream(metadata);
@@ -84,7 +83,7 @@ async function routes(fastify: FastifyInstance, options: any): Promise<void> {
       console.error('error getting file from firebase', error);
       return reply.code(500).send();
     }
-  })
+  });
 }
 
 export default routes;

@@ -3,28 +3,7 @@ import { bucket, textCollection } from './firebase';
 import { v4 as uuidv4 } from 'uuid';
 import * as path from 'path';
 import getRawBody from 'raw-body';
-
-interface TextPostBody {
-  text: string;
-}
-
-interface TextPostRequest extends FastifyRequest {
-  Body: TextPostBody;
-}
-
-interface TextGetParams {
-  id: string;
-}
-
-interface FileGetParams {
-  filename: string;
-}
-
-interface FileRequestFileData {
-  filename: string;
-  file: NodeJS.ReadableStream;
-}
-
+import { TextPostBody, TextPostRequest, TextGetParams, FileGetParams, FileRequestFileData, FilePostRequest } from './models';
 
 async function routes(fastify: FastifyInstance, options: any): Promise<void> {
   fastify.get('/', async (requst, reply) => {
@@ -32,7 +11,7 @@ async function routes(fastify: FastifyInstance, options: any): Promise<void> {
   });
 
   fastify.post<TextPostRequest>('/text', async (request, reply) => {
-    const { text } = request.body;
+    const { text } = request.body as TextPostBody;
     try {
       const docRef = await textCollection.add({ text });
       console.log('docRef', docRef.id);
@@ -56,12 +35,8 @@ async function routes(fastify: FastifyInstance, options: any): Promise<void> {
     }
   });
 
-  interface UploadRequest extends FastifyRequest {
-    file: any;
-  }
-
   fastify.post('/file', async(request, reply) => {
-    const data = await (request as UploadRequest).file() as FileRequestFileData;
+    const data = await (request as FilePostRequest).file() as FileRequestFileData;
     const originalFilename = data.filename;
     const fileStream = data.file;
 

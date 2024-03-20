@@ -16,7 +16,7 @@ export interface FileGetParams {
   filename: string;
 }
 
-export interface FilePostRequest {
+export interface FilePostRequest extends FastifyRequest {
   file: any;
 }
 

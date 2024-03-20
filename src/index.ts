@@ -14,7 +14,11 @@ const server: FastifyInstance<Server, IncomingMessage, ServerResponse> = fastify
   },
 });
 
-server.register(multipart);
+server.register(multipart, {
+  limits: {
+    fileSize: 10 * 1024 * 1024,
+  },
+});
 server.register(cors, { 
   origin: ['http://localhost:3001', 'http://localhost:3001/parados-frontend', 'http://127.0.0.1:3001', 'https://nathanielbrewer.github.io'],
   exposedHeaders: ['Content-Type', 'X-Content-Type', 'Content-Disposition'], 

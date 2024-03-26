@@ -21,7 +21,7 @@ server.register(multipart, {
   },
 });
 server.register(cors, { 
-  origin: ['http://localhost:3001', 'http://localhost:3001/parados-frontend', 'http://127.0.0.1:3001', 'https://nathanielbrewer.github.io'],
+  origin: process.env.CORS_ALLOWED_ORIGINS?.split(' ') ?? [],
   exposedHeaders: ['Content-Type', 'X-Content-Type', 'Content-Disposition'], 
 });
 /** ratelimit returns this error if limit exceeded

@@ -56,7 +56,7 @@ async function routes(fastify: FastifyInstance, options: any): Promise<void> {
         });
       return reply.status(200).send({filename: uniqueFilename});
     } catch(error) {
-      return reply.code(500).send();
+      return reply.status(500).send();
     }
   });
 
@@ -67,7 +67,7 @@ async function routes(fastify: FastifyInstance, options: any): Promise<void> {
       const file = bucket.file(filename);
       const [exists] = await file.exists();
       if(!exists) {
-        return reply.code(404).send();
+        return reply.status(404).send();
       }
 
       const [metadata] = await file.getMetadata();

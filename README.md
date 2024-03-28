@@ -1,6 +1,6 @@
 # Example NodeJS, Fastify, Firebase Admin, TypeScript project
 
-Live demo available at <https://nathanielbrewer.github.io/parados-frontend/>
+Live demo available at <https://nathanielbrewer.github.io/example-react-axios-frontend/>
 
 ## Stack
 - Framework: Fastify

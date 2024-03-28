@@ -1,5 +1,6 @@
-Live demo available at <https://nathanielbrewer.github.io/parados-frontend/>
-Backend deployed on 
+# Example NodeJS, Fastify, Firebase Admin, TypeScript project
+
+Live demo available at <https://nathanielbrewer.github.io/example-react-axios-frontend/>
 
 ## Stack
 - Framework: Fastify

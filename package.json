@@ -1,7 +1,8 @@
 {
-  "name": "parados-backend",
-  "version": "1.0.0",
+  "name": "example-fastify-firebase-backend",
+  "version": "1.0.1",
   "description": "",
+  "homepage": "https://github.com/NathanielBrewer/example-fastify-firebase-backend",
   "main": "index.js",
   "scripts": {
     "build": "tsc",
@@ -9,7 +10,10 @@
     "dev": "ts-node-dev --respawn src/index.ts"
   },
   "keywords": [],
-  "author": "Nathaniel C. Brewer",
+  "author": {
+    "name": "Nathaniel C. Brewer",
+    "email": "nathanielc.brewer@gmail.com"
+  },
   "license": "ISC",
   "devDependencies": {
     "@types/dotenv": "^8.2.0",
@@ -20,7 +24,6 @@
   "dependencies": {
     "@fastify/cors": "^9.0.1",
     "@fastify/multipart": "^8.1.0",
-    "@fastify/rate-limit": "^9.1.0",
     "@types/uuid": "^9.0.8",
     "dotenv": "^16.4.5",
     "fastify": "^4.26.2",
